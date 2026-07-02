@@ -60,9 +60,15 @@ public void draw() {
     lastHistoryReportCount = reports;
   }
 
-  drawHeader(gameTrak.getStatus(), gameTrak.getDeviceSummary(), reports, gameTrak.getLastReportMillis());
+  drawHeader(
+    gameTrak.getDeviceSummary(),
+    gameTrak.getDiagnosticSeverity(),
+    gameTrak.getDiagnosticSummary(),
+    reports,
+    gameTrak.getLastReportMillis()
+  );
   drawReconnectButton();
-  drawBars(rawSnapshot);
+  drawBars(rawSnapshot, "ok".equals(gameTrak.getDiagnosticSeverity()));
   drawTimelines(history, historyCount);
 }
 
@@ -97,12 +103,13 @@ void shutdownGameTrak() {
 /**
  * Draw the title and connection telemetry.
  *
- * @param currentStatus human-readable HID status
  * @param currentDeviceSummary selected HID device summary
+ * @param diagnosticSeverity diagnostic level: ok, info, warning, or error
+ * @param diagnosticSummary compact diagnostic summary
  * @param reports count of valid decoded HID reports
  * @param lastSeen wall-clock timestamp for the latest report
  */
-void drawHeader(String currentStatus, String currentDeviceSummary, int reports, long lastSeen) {
+void drawHeader(String currentDeviceSummary, String diagnosticSeverity, String diagnosticSummary, int reports, long lastSeen) {
   noStroke();
   fill(240);
   textSize(24);
@@ -115,10 +122,56 @@ void drawHeader(String currentStatus, String currentDeviceSummary, int reports, 
   if (lastSeen != 0) {
     age = nf((System.currentTimeMillis() - lastSeen) / 1000.0f, 0, 2) + "s";
   }
-  text("reports " + reports + "   latest " + age + "   " + currentStatus, 40, 76);
+  text("reports " + reports + "   latest " + age, 40, 76);
+  drawInlineDiagnostic(diagnosticSeverity, diagnosticSummary, 210, 76, width - 250);
+
   if (currentDeviceSummary.length() > 0) {
-    text(currentDeviceSummary, 40, 100);
+    fill(150);
+    textSize(13);
+    text(ellipsizeText(currentDeviceSummary, width - 80), 40, 100);
   }
+}
+
+/**
+ * Draw the current HID diagnostic next to the report telemetry.
+ */
+void drawInlineDiagnostic(String severity, String summary, float x, float y, float maxW) {
+  if (summary == null || summary.length() == 0) {
+    return;
+  }
+
+  noStroke();
+  if ("error".equals(severity)) {
+    fill(255, 125, 110);
+  } else if ("warning".equals(severity)) {
+    fill(255, 190, 95);
+  } else if ("ok".equals(severity)) {
+    fill(100, 220, 160);
+  } else {
+    fill(180);
+  }
+  textSize(14);
+  textAlign(LEFT, BASELINE);
+  text(ellipsizeText(summary, maxW), x, y);
+}
+
+/**
+ * Shorten long diagnostic strings so they stay inside the canvas.
+ */
+String ellipsizeText(String value, float maxW) {
+  if (value == null) {
+    return "";
+  }
+  if (textWidth(value) <= maxW) {
+    return value;
+  }
+
+  String suffix = "...";
+  String result = value;
+  while (result.length() > 0 && textWidth(result + suffix) > maxW) {
+    result = result.substring(0, result.length() - 1);
+  }
+  return result + suffix;
 }
 
 /**
@@ -191,7 +244,7 @@ boolean shouldShowReconnectButton() {
 /**
  * Draw the six current raw values as horizontal bars.
  */
-void drawBars(int[] rawSnapshot) {
+void drawBars(int[] rawSnapshot, boolean active) {
   float left = 190;
   float top = 126;
   float barW = 700;
@@ -211,7 +264,7 @@ void drawBars(int[] rawSnapshot) {
     fill(45);
     rect(left, y, barW, barH, 4);
 
-    drawRawBar(left, y, barW, barH, rawSnapshot[i], tether);
+    drawRawBar(left, y, barW, barH, rawSnapshot[i], tether, active);
 
     fill(230);
     textAlign(LEFT, CENTER);
@@ -313,9 +366,15 @@ float rawToTimelineY(int rawValue, float centerY, float amp) {
 /**
  * Draw one raw value in bar form.
  */
-void drawRawBar(float x, float y, float w, float h, int value, boolean tether) {
+void drawRawBar(float x, float y, float w, float h, int value, boolean tether, boolean active) {
   int constrained = constrain(value, 0, 4095);
   float mappedX = map(constrained, 0, 4095, x, x + w);
+
+  if (!active) {
+    fill(92);
+    rect(x, y, w, h, 4);
+    return;
+  }
 
   if (tether) {
     mappedX = map(constrained, 4095, 0, x, x + w);

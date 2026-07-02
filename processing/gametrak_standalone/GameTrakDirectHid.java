@@ -42,6 +42,9 @@ public class GameTrakDirectHid implements Runnable {
   long lastReportMillis;
   String status = "starting HID";
   String deviceSummary = "";
+  String diagnosticSummary = "HID startup pending";
+  String diagnosticDetail = "";
+  String diagnosticSeverity = "info";
 
   /**
    * Start the background HID reader thread.
@@ -120,11 +123,30 @@ public class GameTrakDirectHid implements Runnable {
     }
   }
 
+  public String getDiagnosticSummary() {
+    synchronized (stateLock) {
+      return diagnosticSummary;
+    }
+  }
+
+  public String getDiagnosticDetail() {
+    synchronized (stateLock) {
+      return diagnosticDetail;
+    }
+  }
+
+  public String getDiagnosticSeverity() {
+    synchronized (stateLock) {
+      return diagnosticSeverity;
+    }
+  }
+
   /**
    * Own the HID service and active device handle.
    */
   public void run() {
     try {
+      setDiagnostic("info", "Starting HID service", "Initializing hid4java without automatic background reads.");
       HidApi.darwinOpenDevicesNonExclusive = true;
 
       HidServicesSpecification spec = new HidServicesSpecification();
@@ -134,16 +156,37 @@ public class GameTrakDirectHid implements Runnable {
 
       hidServices = HidManager.getHidServices(spec);
       hidServices.start();
+      setDiagnostic("info", "HID service started", "Scanning for GameTrak VID 0x14B7 PID 0x0982.");
 
       while (running) {
         reconnectRequested = false;
-        HidDevice device = selectGameTrakDevice();
+        SelectionResult selection = selectGameTrakDevice();
+        HidDevice device = selection.device;
 
         if (device == null) {
           setStatus("GameTrak not found");
+          setDiagnostic(
+            "error",
+            "GameTrak not found",
+            "hid4java sees " + selection.totalHidDevices + " HID devices, but none match VID 0x14B7 PID 0x0982. Check USB power, cable, adapter, and macOS USB permission."
+          );
           clearDeviceSummary();
           sleepQuietly(RECONNECT_DELAY_MS);
           continue;
+        }
+
+        if (selection.joystickMatches == 0) {
+          setDiagnostic(
+            "warning",
+            "GameTrak VID/PID found, but joystick collection was not identified",
+            "Found " + selection.gametrakMatches + " matching HID collection(s); opening the first fallback collection. This can indicate a descriptor or OS enumeration difference."
+          );
+        } else {
+          setDiagnostic(
+            "info",
+            "GameTrak HID collection found",
+            "Found " + selection.gametrakMatches + " matching collection(s), " + selection.joystickMatches + " joystick collection(s)."
+          );
         }
 
         openAndStreamDevice(device);
@@ -154,6 +197,7 @@ public class GameTrakDirectHid implements Runnable {
       }
     } catch (Exception e) {
       setStatus("HID service error: " + e.getMessage());
+      setDiagnostic("error", "HID service error", exceptionDetail(e));
     } finally {
       closeCurrentDevice();
       if (hidServices != null) {
@@ -167,23 +211,33 @@ public class GameTrakDirectHid implements Runnable {
   /**
    * Select the joystick collection from all matching GameTrak HID collections.
    */
-  HidDevice selectGameTrakDevice() {
+  SelectionResult selectGameTrakDevice() {
     List devices = hidServices.getAttachedHidDevices();
     HidDevice fallback = null;
+    HidDevice selected = null;
+    int gametrakMatches = 0;
+    int joystickMatches = 0;
 
     for (int i = 0; i < devices.size(); i++) {
       HidDevice device = (HidDevice)devices.get(i);
       if (device.getVendorId() == GAMETRAK_VID && device.getProductId() == GAMETRAK_PID) {
+        gametrakMatches++;
         if (fallback == null) {
           fallback = device;
         }
         if (device.getUsagePage() == HID_USAGE_PAGE_GENERIC_DESKTOP && device.getUsage() == HID_USAGE_JOYSTICK) {
-          return device;
+          joystickMatches++;
+          if (selected == null) {
+            selected = device;
+          }
         }
       }
     }
 
-    return fallback;
+    if (selected == null) {
+      selected = fallback;
+    }
+    return new SelectionResult(selected, devices.size(), gametrakMatches, joystickMatches);
   }
 
   /**
@@ -191,7 +245,17 @@ public class GameTrakDirectHid implements Runnable {
    */
   void openAndStreamDevice(HidDevice device) {
     if (!device.open()) {
-      setStatus("open failed: " + device.getLastErrorMessage());
+      String lastError = safeString(device.getLastErrorMessage());
+      if (lastError.length() == 0) {
+        lastError = "hid4java did not provide an error string";
+      }
+      setStatus("open failed: " + lastError);
+      setDeviceSummary(deviceSummary(device));
+      setDiagnostic(
+        "error",
+        "GameTrak found but HID open failed (may be in use)",
+        lastError + ". This usually means another app owns the HID handle, macOS has a stale handle, or the selected HID collection is unavailable. Quit other GameTrak/Python/Processing/Chrome MIDI tools, then use Reconnect HID."
+      );
       return;
     }
 
@@ -202,11 +266,13 @@ public class GameTrakDirectHid implements Runnable {
     device.setNonBlocking(false);
     setDeviceSummary(deviceSummary(device));
     setStatus("opened; sending init");
+    setDiagnostic("info", "GameTrak opened", "HID handle opened; sending libgametrak-style PS2 init sequence.");
     int ps2Key = sendPs2Init(device);
     int localReportCount = 0;
     int nextKeepaliveReport = 100;
     long staleDeadline = System.currentTimeMillis() + STALE_RECONNECT_MS;
     setStatus("receiving HID");
+    setDiagnostic("info", "Waiting for reports", "Init was sent; waiting for valid 16-byte HID input reports.");
 
     while (running && !reconnectRequested) {
       if (localReportCount >= nextKeepaliveReport) {
@@ -221,6 +287,11 @@ public class GameTrakDirectHid implements Runnable {
       if (n <= 0) {
         if (now >= staleDeadline) {
           setStatus("no valid reports for " + (STALE_RECONNECT_MS / 1000) + "s");
+          setDiagnostic(
+            "warning",
+            "GameTrak opened but no reports arrived",
+            "The HID handle is open, but no valid sensor reports arrived after init. Try Reconnect HID, unplug/replug, or move the controller."
+          );
           return;
         }
         continue;
@@ -323,6 +394,12 @@ public class GameTrakDirectHid implements Runnable {
       reportCount++;
       lastReportMillis = System.currentTimeMillis();
       status = "receiving HID";
+      if (!"ok".equals(diagnosticSeverity)) {
+        diagnosticSeverity = "ok";
+        diagnosticSummary = "Receiving GameTrak reports";
+        diagnosticDetail = "Startup succeeded; valid raw HID reports are streaming.";
+        logDiagnostic("ok", diagnosticSummary, diagnosticDetail);
+      }
     }
   }
 
@@ -339,8 +416,38 @@ public class GameTrakDirectHid implements Runnable {
   }
 
   void setStatus(String message) {
+    boolean changed = false;
     synchronized (stateLock) {
+      changed = !message.equals(status);
       status = message;
+    }
+    if (changed) {
+      System.out.println("[GameTrak HID] status: " + message);
+    }
+  }
+
+  void setDiagnostic(String severity, String summary, String detail) {
+    boolean changed = false;
+    synchronized (stateLock) {
+      changed = !severity.equals(diagnosticSeverity) || !summary.equals(diagnosticSummary) || !detail.equals(diagnosticDetail);
+      diagnosticSeverity = severity;
+      diagnosticSummary = summary;
+      diagnosticDetail = detail;
+    }
+    if (changed) {
+      logDiagnostic(severity, summary, detail);
+    }
+  }
+
+  void logDiagnostic(String severity, String summary, String detail) {
+    String line = "[GameTrak HID] " + severity.toUpperCase() + ": " + summary;
+    if (detail != null && detail.length() > 0) {
+      line += " - " + detail;
+    }
+    if ("error".equals(severity)) {
+      System.err.println(line);
+    } else {
+      System.out.println(line);
     }
   }
 
@@ -370,6 +477,17 @@ public class GameTrakDirectHid implements Runnable {
     return value;
   }
 
+  String exceptionDetail(Exception e) {
+    if (e == null) {
+      return "unknown exception";
+    }
+    String message = e.getMessage();
+    if (message == null || message.length() == 0) {
+      return e.getClass().getName();
+    }
+    return e.getClass().getName() + ": " + message;
+  }
+
   String toFixedHex(int value, int width) {
     String text = Integer.toHexString(value).toUpperCase();
     while (text.length() < width) {
@@ -383,6 +501,20 @@ public class GameTrakDirectHid implements Runnable {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
+    }
+  }
+
+  static class SelectionResult {
+    final HidDevice device;
+    final int totalHidDevices;
+    final int gametrakMatches;
+    final int joystickMatches;
+
+    SelectionResult(HidDevice device, int totalHidDevices, int gametrakMatches, int joystickMatches) {
+      this.device = device;
+      this.totalHidDevices = totalHidDevices;
+      this.gametrakMatches = gametrakMatches;
+      this.joystickMatches = joystickMatches;
     }
   }
 }

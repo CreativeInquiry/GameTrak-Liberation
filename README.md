@@ -38,7 +38,7 @@ USD 20-40), and because the tethered joysticks are expressive and physically
 legible 3D position-trackers, the device has become a popular platform for experimental interfaces, especially in electronic music and machine-learning workflows such as
 [Wekinator](https://doc.gold.ac.uk/~mas01rf/Wekinator/).
 
-[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />From Richard McReynolds, [*Capturing Movement in Sound*](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s) (2024). Performed by Jodi Ann Nicholson. [More information](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf).
+[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />From [*Capturing Movement in Sound*](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s) (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [More information](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf).
 
 ---
 
@@ -63,8 +63,10 @@ All paths expose the same semantic channel order:
 left_x left_y left_r right_x right_y right_r
 ```
 
-Raw values are `0..4095`. Joystick X/Y values are centered controls. Tether
-`R` values are inverted relative to “extension”: a short/retracted tether reads high, while pulling it out makes the raw value go down.
+* Raw values are `0..4095`. 
+* Joystick X/Y values are centered controls. 
+* Tether `R` values are inverted relative to its “extension” (a short/retracted tether reads high, while pulling it out makes the raw value go down). 
+* The GameTrak footswitch is not yet supported. 
 
 
 ---
@@ -268,6 +270,8 @@ const rawGameTrakValue = event.rawValue - 8192;
 
 ## Processing And p5.js
 
+![gametrak_osc_in_processing.gif](img/gametrak_osc_in_processing.gif)
+
 
 ### Processing Standalone HID
 
@@ -362,7 +366,7 @@ port number.
 
 ### p5.js MIDI Receiver
 
-[This p5.js sketch](p5js/gametrak_midi_receiver_p5v2/README.md) uses WebMIDI to receive MIDI signals from the `gametrak-midi` Python bridge.
+[**This p5.js sketch**](p5js/gametrak_midi_receiver_p5v2/README.md) uses WebMIDI to receive MIDI signals from the `gametrak-midi` Python bridge.
 
 Path:
 
