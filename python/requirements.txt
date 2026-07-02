@@ -1,0 +1,6 @@
+hidapi
+mido
+python-rtmidi
+python-osc
+rich
+pytest

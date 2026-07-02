@@ -1,0 +1,29 @@
+[project]
+name = "gametrak-sdk"
+version = "0.0.0"
+description = "HID, OSC, and Processing support for the In2Games GameTrak controller"
+requires-python = ">=3.10"
+dependencies = [
+  "hidapi",
+  "mido",
+  "python-rtmidi",
+  "python-osc",
+  "rich",
+]
+
+[project.scripts]
+gametrak-osc = "gametrak.osc:main"
+gametrak-stdout = "gametrak.stdout:main"
+gametrak-midi = "gametrak.midi:main"
+gametrak-record = "gametrak.record:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["gametrak*"]
