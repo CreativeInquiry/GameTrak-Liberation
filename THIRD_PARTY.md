@@ -99,8 +99,8 @@ from jsDelivr.
 
 | Component | Version | License | URL used by sketch | Upstream |
 |---|---:|---|---|---|
-| p5.js | 1.11.13 | LGPL-2.1 | `https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.js` in `p5js/gametrak_midi_receiver_p5v1/index.html` | <https://github.com/processing/p5.js> |
-| p5.js | 2.3.0 | LGPL-2.1 | `https://cdn.jsdelivr.net/npm/p5@2.3.0/lib/p5.js` in `p5js/gametrak_midi_receiver_p5v2/index.html` | <https://github.com/processing/p5.js> |
+| p5.js | 1.11.13 | LGPL-2.1 | `https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.js` in `p5js/gametrak_midi_receiver_p5v1/index.html` and `p5js/gametrak_ws_receiver_p5v1/index.html` | <https://github.com/processing/p5.js> |
+| p5.js | 2.3.0 | LGPL-2.1 | `https://cdn.jsdelivr.net/npm/p5@2.3.0/lib/p5.js` in `p5js/gametrak_midi_receiver_p5v2/index.html` and `p5js/gametrak_ws_receiver_p5v2/index.html` | <https://github.com/processing/p5.js> |
 | WebMidi.js | 3.1.16 | Apache-2.0 | `https://cdn.jsdelivr.net/npm/webmidi@3.1.16/dist/iife/webmidi.iife.js` | <https://github.com/djipco/webmidi> |
 
 ## Python Package Dependencies
@@ -135,3 +135,7 @@ another Processing OSC library.
 The WebMIDI receiver logic in `p5js/gametrak_midi_receiver_p5v1/sketch.js` and
 `p5js/gametrak_midi_receiver_p5v2/sketch.js` is local project code using p5.js
 and WebMidi.js APIs.
+
+The WebSocket receiver logic in `p5js/gametrak_ws_receiver_p5v1/sketch.js` and
+`p5js/gametrak_ws_receiver_p5v2/sketch.js` is local project code using p5.js
+and the browser's native WebSocket API.

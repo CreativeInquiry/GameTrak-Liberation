@@ -16,6 +16,8 @@ gametrak-osc = "gametrak.osc:main"
 gametrak-stdout = "gametrak.stdout:main"
 gametrak-midi = "gametrak.midi:main"
 gametrak-record = "gametrak.record:main"
+gametrak-ws = "gametrak.ws:main"
+gametrak-playback = "gametrak.playback:main"
 
 [project.optional-dependencies]
 dev = [

@@ -15,8 +15,7 @@ import java.nio.ByteOrder;
  * or other external Processing libraries so it can be dropped into Processing
  * and run as-is.</p>
  *
- * <p>The bridge sends both {@code /gametrak/raw} and {@code /gametrak/norm} by
- * default. This sketch accepts only {@code /gametrak/raw}; raw HID-scale
+ * <p>This sketch accepts {@code /gametrak/raw}; raw HID-scale
  * values are easier to inspect while reverse-engineering because they expose
  * the device's actual 0..4095 sensor readings instead of calibration output.</p>
  *
@@ -554,7 +553,7 @@ void parseOscPacket(byte[] data, int length) {
     return;
   }
 
-  if (address.text.equals("/gametrak/norm") || address.text.equals("/wekinator/control/inputs")) {
+  if (address.text.equals("/gametrak/normalized") || address.text.equals("/wekinator/control/inputs")) {
     if (!ACCEPT_NORMALIZED_MESSAGES) {
       return;
     }

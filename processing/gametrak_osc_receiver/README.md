@@ -41,9 +41,9 @@ The receiver listens on UDP port `2434` for:
 Only the first six raw values are visualized. They are expected to be in the
 GameTrak HID range `0..4095`.
 
-The receiver ignores `/gametrak/norm`, Wekinator messages, and any other OSC
-address. This keeps the display raw-first and avoids mixing normalized floats
-with raw integer bars.
+The receiver ignores `/gametrak/normalized`, Wekinator messages, and any other
+OSC address. This keeps the display raw-first and avoids mixing normalized
+floats with raw integer bars.
 
 ## Reset Button
 

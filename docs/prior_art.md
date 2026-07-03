@@ -1,10 +1,19 @@
 # GameTrak Prior Art
 
-## casiez/libgametrak
+[![jenn_kirby_gametrak_performance.jpg](../img/jenn_kirby_gametrak_performance.jpg)](https://www.youtube.com/watch?v=K9OYlnF-eto)
+
+**Contents**
+
+* [The foundation: `libgametrak`](#the-foundation-libgametrak)
+* [Other Related Work and GameTrak Hacking](#other-related-work-and-gametrak-hacking)
+
+---
+
+## Technical foundation: `libgametrak`
 
 Source: <https://github.com/casiez/libgametrak>
 
-This is the most relevant prior implementation found so far. It is a C++ cross-platform library based on HIDAPI.
+**[`libgametrak`](https://github.com/casiez/libgametrak)** by Géry Casiez is the most relevant prior implementation of an interface to the GameTrak that we found. It is a C++ cross-platform library based on HIDAPI.
 
 Observed implementation details from `libgametrak/HIDAPIGameTrak.cpp`:
 
@@ -76,6 +85,7 @@ Axis maxs: [4051, 1250, 3710, 4077, 853, 3706]
 
 ## Other Related Work and GameTrak Hacking
 
+* [Jenn Kirby, *Duet for 3D Printer and Gametrak*](https://www.youtube.com/watch?v=K9OYlnF-eto). A live electronic music performance in which a 3D printer is controlled by a GameTrak interface.
 * [Chris O'Shea, *Drop Spin Fade*](https://www.chrisoshea.org/portfolio/drop-spin-fade) - interactive artwork reference involving GameTrak-style gestural control.
 * [Richard McReynolds, *The GameTrak Controller*](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf) - new-media dance and sound context, including *Capturing Movement in Sound*.
 * [David Goldberg, *Game Trak*](https://www.davidgoldberg.net/gesticularcontroller) - musical-interface notes connecting GameTrak, Wekinator, Max/MSP, SuperCollider, and spatial control.
@@ -83,6 +93,7 @@ Axis maxs: [4051, 1250, 3710, 4077, 853, 3706]
 * [Gareth W. Young, *GameTrak game controller Project*](https://gareth.prof/2014/10/23/gametrak-game-controller-project/) - Arduino/Processing/OSC hardware rebuild, including a haptic bowl modification.
 * [Jan Ciger, *Modding GameTrak game controller for PC use*](http://janoc.rd-h.com/archives/129) - teardown notes, revision differences, and PC-mod guidance for PlayStation 2 units.
 * [X37V, *Mad Catz Gametrak Mod for Max/MSP*](http://x37v.com/x37v/writing/mad-catz-gametrak-mod-for-maxmsp/) - solder-bridge modification exposing six 12-bit axes to Max/MSP through HID.
-* [YouTube video reference: GameTrak-related demo/performance](https://www.youtube.com/watch?v=ZxJD9DXDB1E)
 * [YouTube video reference: GameTrak-related demo/performance](https://www.youtube.com/watch?v=Y4iimo20wSQ)
 * [YouTube video reference: GameTrak-related demo/performance](https://www.youtube.com/watch?v=QPqQ0vU0yjw)
+
+[![araujo_mockup_builder.jpg](../img/araujo_mockup_builder.jpg)](https://www.youtube.com/watch?v=ZxJD9DXDB1E)<br />*Bruno De Araujo, "[Mockup Builder: Direct 3D Modeling On and Above the Surface in a Continuous Interaction Space](https://www.youtube.com/watch?v=ZxJD9DXDB1E)", 2012.*

@@ -372,7 +372,7 @@ Recommended OSC messages after semantic axis mapping is known:
 /gametrak/raw
   int left_x left_y left_r right_x right_y right_r buttons
 
-/gametrak/norm
+/gametrak/normalized
   float left_x left_y left_r right_x right_y right_r
 
   x/y joystick axes are centered -1.0..1.0.
@@ -398,7 +398,7 @@ Wekinator-compatible message:
 /wekinator/control/inputs
   float left_x left_y left_r right_x right_y right_r
 
-  Same value ranges as /gametrak/norm.
+  Same value ranges as /gametrak/normalized.
 ```
 
 Default port:

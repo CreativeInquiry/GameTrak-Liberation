@@ -17,19 +17,19 @@ from gametrak.osc import (
 from gametrak.report import decode_report
 
 
-def test_build_osc_messages_includes_raw_norm_and_wekinator_payloads() -> None:
+def test_build_osc_messages_includes_raw_normalized_and_wekinator_payloads() -> None:
     report = decode_report(bytes.fromhex("00080008ff0fff0f0000000000000000"))
 
     messages = build_osc_messages(
         report,
         include_raw=True,
-        include_norm=True,
+        include_normalized=True,
         include_wekinator=True,
     )
 
     assert messages == [
         ("/gametrak/raw", [2048, 2048, 4095, 4095, 0, 0, 0]),
-        ("/gametrak/norm", [0.0, 0.0, 0.0, 1.0, -1.0, 1.0]),
+        ("/gametrak/normalized", [0.0, 0.0, 0.0, 1.0, -1.0, 1.0]),
         ("/wekinator/control/inputs", [0.0, 0.0, 0.0, 1.0, -1.0, 1.0]),
     ]
 
@@ -40,11 +40,11 @@ def test_build_osc_messages_can_send_only_normalized_payload() -> None:
     messages = build_osc_messages(
         report,
         include_raw=False,
-        include_norm=True,
+        include_normalized=True,
         include_wekinator=False,
     )
 
-    assert messages == [("/gametrak/norm", [0.0, 0.0, 0.0, 1.0, -1.0, 1.0])]
+    assert messages == [("/gametrak/normalized", [0.0, 0.0, 0.0, 1.0, -1.0, 1.0])]
 
 
 def test_control_state_consumes_init_and_reconnect_requests() -> None:

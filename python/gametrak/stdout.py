@@ -22,7 +22,7 @@ from gametrak.ps2 import send_ps2_init, send_ps2_keepalive
 from gametrak.report import GameTrakRawReport, decode_report, values_are_in_descriptor_range
 from gametrak.values import normalized_tuple, raw_tuple
 
-ValueMode = Literal["raw", "norm", "hex", "0dec"]
+ValueMode = Literal["raw", "normalized", "hex", "0dec"]
 HEX_WIDTH = 3
 ZERO_DECIMAL_WIDTH = 4
 
@@ -39,7 +39,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--raw", dest="mode", action="store_const", const="raw", help="print raw 0..4095 values")
-    mode.add_argument("--norm", dest="mode", action="store_const", const="norm", help="print normalized values")
+    mode.add_argument("--normalized", dest="mode", action="store_const", const="normalized", help="print normalized values")
     mode.add_argument("--hex", dest="mode", action="store_const", const="hex", help="print raw values as 3-digit uppercase hex")
     mode.add_argument("--0dec", dest="mode", action="store_const", const="0dec", help="print raw values as 4-digit zero-padded decimal")
     parser.set_defaults(mode="raw")
@@ -47,7 +47,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--rate", type=float, default=0.0, help="maximum output rate in Hz; default prints every report")
     parser.add_argument("--seconds", type=float, default=None, help="optional run duration for testing")
     parser.add_argument("--diagnose", action="store_true", help="print a GameTrak HID/USB diagnostic report and exit")
-    parser.add_argument("--precision", type=int, default=3, help="decimal places for --norm output")
+    parser.add_argument("--precision", type=int, default=3, help="decimal places for --normalized output")
     parser.add_argument(
         "--open-mode",
         choices=("auto", "path", "vidpid"),
@@ -87,11 +87,11 @@ def format_stdout_line(
       width is 3 because the largest possible axis value is ``0xFFF``.
     - ``0dec`` prints those same raw integers as fixed-width decimal. The width
       is 4 because the largest possible axis value is ``4095``.
-    - ``norm`` prints descriptor-scale convenience values, not calibrated
-      values.
+    - ``normalized`` prints descriptor-scale convenience values, not
+      calibrated values.
     """
 
-    if mode == "norm":
+    if mode == "normalized":
         decimals = max(0, precision)
         return " ".join(f"{value:.{decimals}f}" for value in normalized_tuple(report))
 

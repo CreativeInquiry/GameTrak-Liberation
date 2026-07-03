@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from gametrak.report import decode_report
 from gametrak.stdout import format_stdout_line, parse_args
 
@@ -11,11 +13,16 @@ def test_stdout_cli_defaults_to_raw_and_unthrottled() -> None:
     assert args.rate == 0.0
 
 
-def test_stdout_cli_accepts_norm_and_rate() -> None:
-    args = parse_args(["--norm", "--rate", "30"])
+def test_stdout_cli_accepts_normalized_and_rate() -> None:
+    args = parse_args(["--normalized", "--rate", "30"])
 
-    assert args.mode == "norm"
+    assert args.mode == "normalized"
     assert args.rate == 30
+
+
+def test_stdout_cli_rejects_old_norm_spelling() -> None:
+    with pytest.raises(SystemExit):
+        parse_args(["--norm"])
 
 
 def test_stdout_cli_accepts_hex_mode() -> None:
@@ -53,7 +60,7 @@ def test_format_stdout_line_prints_six_normalized_values() -> None:
 
     line = format_stdout_line(
         report,
-        mode="norm",
+        mode="normalized",
         precision=3,
     )
 

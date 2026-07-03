@@ -1,8 +1,8 @@
 # Sample Report Captures
 
-JSONL captures from `gametrak-record` and earlier protocol investigation tools.
+This directory contains JSONL captures from `gametrak-record` and earlier protocol investigation tools. These captures can be replayed over various protocols (OSC, MIDI, WebSockets, stdout, etc.) using `gametrak-playback`.
 
-The current official sample capture is:
+The current official sample capture is available [here](gametrack_sample_10_second_recording.jsonl):
 
 ```text
 gametrack_sample_10_second_recording.jsonl

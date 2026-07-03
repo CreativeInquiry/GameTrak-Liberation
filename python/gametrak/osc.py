@@ -144,7 +144,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--port", type=int, default=2434, help="OSC destination UDP port")
     parser.add_argument("--wekinator", action="store_true", help="also send /wekinator/control/inputs")
     parser.add_argument("--raw", action="store_true", help="send /gametrak/raw")
-    parser.add_argument("--normalized", action="store_true", help="send /gametrak/norm")
+    parser.add_argument("--normalized", action="store_true", help="send /gametrak/normalized")
     parser.add_argument("--rate", type=float, default=0.0, help="maximum OSC send rate in Hz; default sends every report")
     parser.add_argument("--print", action="store_true", help="print transmitted values")
     parser.add_argument("--seconds", type=float, default=None, help="optional run duration for testing")
@@ -177,7 +177,7 @@ def build_osc_messages(
     report: GameTrakRawReport,
     *,
     include_raw: bool,
-    include_norm: bool,
+    include_normalized: bool,
     include_wekinator: bool,
 ) -> list[OscMessage]:
     """Build OSC payloads from one decoded report.
@@ -186,13 +186,13 @@ def build_osc_messages(
     ``left_x, left_y, left_r, right_x, right_y, right_r``.
 
     ``/gametrak/raw`` appends the decoded button bitfield as a seventh
-    argument. ``/gametrak/norm`` and Wekinator payloads contain only the six
-    convenience-normalized floats. No calibration profile, deadband, smoothing,
-    or range fitting is applied.
+    argument. ``/gametrak/normalized`` and Wekinator payloads contain only the
+    six convenience-normalized floats. No calibration profile, deadband,
+    smoothing, or range fitting is applied.
     """
 
     messages: list[OscMessage] = []
-    norm = list(normalized_tuple(report))
+    normalized = list(normalized_tuple(report))
 
     if include_raw:
         # Raw payloads are semantic-axis ordered, not HID descriptor ordered.
@@ -200,11 +200,11 @@ def build_osc_messages(
         raw.append(0 if report.buttons is None else report.buttons)
         messages.append(("/gametrak/raw", raw))
 
-    if include_norm:
-        messages.append(("/gametrak/norm", norm))
+    if include_normalized:
+        messages.append(("/gametrak/normalized", normalized))
 
     if include_wekinator:
-        messages.append(("/wekinator/control/inputs", norm))
+        messages.append(("/wekinator/control/inputs", normalized))
 
     return messages
 
@@ -265,11 +265,11 @@ def run(args: argparse.Namespace, *, console: Console | None = None) -> int:
     control_socket: OscControlSocket | None = None
 
     include_raw = bool(args.raw)
-    include_norm = bool(args.normalized)
-    if not include_raw and not include_norm and not args.wekinator:
+    include_normalized = bool(args.normalized)
+    if not include_raw and not include_normalized and not args.wekinator:
         include_raw = True
     if args.wekinator:
-        include_norm = True
+        include_normalized = True
 
     min_send_interval = 1.0 / args.rate if args.rate and args.rate > 0 else 0.0
     read_timeout_ms = max(int(args.read_timeout_ms), 0)
@@ -307,7 +307,7 @@ def run(args: argparse.Namespace, *, console: Console | None = None) -> int:
                     control_state=control_state,
                     control_socket=control_socket,
                     include_raw=include_raw,
-                    include_norm=include_norm,
+                    include_normalized=include_normalized,
                     min_send_interval=min_send_interval,
                     read_timeout_ms=read_timeout_ms,
                     ps2_key=ps2_key,
@@ -362,7 +362,7 @@ def _stream_device(
     control_state: OscControlState,
     control_socket: OscControlSocket | None,
     include_raw: bool,
-    include_norm: bool,
+    include_normalized: bool,
     min_send_interval: float,
     read_timeout_ms: int,
     ps2_key: int | None,
@@ -431,7 +431,7 @@ def _stream_device(
         messages = build_osc_messages(
             report,
             include_raw=include_raw,
-            include_norm=include_norm,
+            include_normalized=include_normalized,
             include_wekinator=args.wekinator,
         )
         send_osc_messages(client, messages)
