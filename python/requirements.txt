@@ -3,4 +3,5 @@ mido
 python-rtmidi
 python-osc
 rich
-pytest
+# Dev/test only; pyproject.toml also exposes this via the "dev" extra.
+# pytest

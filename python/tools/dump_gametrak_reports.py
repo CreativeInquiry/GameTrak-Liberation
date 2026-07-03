@@ -182,7 +182,7 @@ def main() -> int:
                     else selected_path
                 )
             )
-        console.print("Run tools/dump_hid_devices.py --all to confirm the device is visible.")
+        console.print("Run gametrak-stdout --diagnose to confirm the device is visible.")
         return 2
 
     console.print(

@@ -170,7 +170,8 @@ hat = tail_bits & 0x0F
 buttons = (tail_bits >> 4) & 0x0FFF
 ```
 
-This must not be treated as final until verified with `python/tools/dump_gametrak_reports.py`.
+This must not be treated as final until verified against additional
+`gametrak-record` captures from other GameTrak units.
 
 Prior-art warning:
 
@@ -303,7 +304,7 @@ Observed successful init sequence:
 6. 16-byte input reports stream continuously.
 ```
 
-`python/tools/dump_gametrak_reports.py --open-mode vidpid --ps2-init` implements this.
+The current HID implementations use this sequence when initializing the device.
 
 After streaming starts, the tool periodically sends the follow-up `0x46, key`
 packets used by `casiez/libgametrak` ps2mode.

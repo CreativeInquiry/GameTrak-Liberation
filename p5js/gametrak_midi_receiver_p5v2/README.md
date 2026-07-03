@@ -15,7 +15,7 @@ This version loads p5.js `2.3.0`:
 Install or upgrade the Python bridge, then start the virtual MIDI output:
 
 ```bash
-cd ~/Desktop/gametrak/python
+cd path/to/GameTrak-Liberation/python
 pipx install --force --python python3.10 .
 gametrak-midi
 ```
@@ -27,7 +27,7 @@ Run `gametrak-midi --help` to see optional arguments such as `--rate`,
 Serve the repository over localhost:
 
 ```bash
-cd ~/Desktop/gametrak
+cd path/to/GameTrak-Liberation
 python3 -m http.server 8000
 ```
 

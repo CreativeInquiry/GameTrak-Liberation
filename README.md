@@ -191,14 +191,14 @@ pipelines.
 ### `gametrak-playback`
 
 `gametrak-playback` replays a JSONL capture made by `gametrak-record`. It does not open the GameTrak device. Instead, it reconstructs decoded reports from the
-stored `raw_bytes_hex` rows and emits them through one selected protocol. Some sample recordings are [here](sample_reports/README.md).
+stored `raw_bytes_hex` rows and emits them through one selected protocol. The official sample recording is [here](sample_reports/README.md).
 
 ```bash
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --stdout
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --stdout --rate 30
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --osc --loop
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --ws --loop
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --midi --port-name "GameTrak Playback"
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --stdout
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --stdout --rate 30
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --osc --loop
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --ws --loop
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --midi --port-name "GameTrak Playback"
 ```
 
 Choose exactly one output protocol:
@@ -217,11 +217,11 @@ repeat the capture indefinitely while developing receivers.
 Output mode flags match the live tools where they apply:
 
 ```bash
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --stdout --hex
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --stdout --normalized
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --osc --normalized
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --ws --normalized
-gametrak-playback sample_reports/gametrack_sample_10_second_recording.jsonl --osc --wekinator
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --stdout --hex
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --stdout --normalized
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --osc --normalized
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --ws --normalized
+gametrak-playback sample_reports/gametrak_sample_10_second_recording.jsonl --osc --wekinator
 ```
 
 `--hex` and `--0dec` are stdout-only. MIDI playback uses raw GameTrak values,
@@ -565,7 +565,7 @@ Empirical semantic mapping:
 | `Ry` | `right_y` | low = toward user, high = away |
 | `Rz` | `right_r` | high = retracted/short, lower = extended |
 
-![gametrack_joystick_diagram.png](img/gametrack_joystick_diagram.png)
+![gametrak_joystick_diagram](img/gametrak_joystick_diagram.png)
 
 
 Known report notes:

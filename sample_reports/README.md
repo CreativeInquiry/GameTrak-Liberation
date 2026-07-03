@@ -1,27 +1,13 @@
-# Sample Report Captures
+# Sample GameTrak Captures
 
-This directory contains JSONL captures from `gametrak-record` and earlier protocol investigation tools. These captures can be replayed over various protocols (OSC, MIDI, WebSockets, stdout, etc.) using `gametrak-playback`.
-
-The current official sample capture is available [here](gametrack_sample_10_second_recording.jsonl):
+This directory contains a JSONL capture from `gametrak-record`. This capture can be replayed over various protocols (OSC, MIDI, WebSockets, stdout, etc.) using `gametrak-playback`. This official sample capture is available [**here**](gametrak_sample_10_second_recording.jsonl):
 
 ```text
-gametrack_sample_10_second_recording.jsonl
+gametrak_sample_10_second_recording.jsonl
 ```
 
 It was recorded with `gametrak-record` and includes a metadata row, per-report
 raw bytes, decoded HID axes, semantic raw values, and a summary row.
-
-The older captures in `additional_recordings/` preserve raw 16-byte HID
-reports from controlled movement tests. They were used to confirm:
-
-```text
-raw x  = left_x
-raw y  = left_y
-raw z  = left_r
-raw rx = right_x
-raw ry = right_y
-raw rz = right_r
-```
 
 Keep full reports in captures. Bytes 14-15 are marked as padding by the HID
 descriptor, but live captures show right-tether-related movement there.

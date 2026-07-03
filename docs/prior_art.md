@@ -51,9 +51,6 @@ report and compare both descriptor-derived and libgametrak-style mappings.
 Local test result:
 
 ```text
-Command:
-python python/tools/dump_gametrak_reports.py --open-mode vidpid --blocking-read
-
 Result:
 Device opened, but blocking read did not return a report within the test window.
 ```
@@ -61,9 +58,6 @@ Device opened, but blocking read did not return a report within the test window.
 Empirical result after trying the optional ps2mode sequence:
 
 ```text
-Command:
-python python/tools/dump_gametrak_reports.py --open-mode vidpid --ps2-init
-
 Result:
 Device opened and started streaming 16-byte reports after:
 1. writing "Gametrak"
