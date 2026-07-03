@@ -79,6 +79,11 @@ Axis maxs: [4051, 1250, 3710, 4077, 853, 3706]
 
 ## Other Related Work and GameTrak Hacking
 
+* Rebecca Anne Fiebrink, [*Real-time Human Interaction with Supervised Learning Algorithms for Music Composition and Performance*](https://www.cs.princeton.edu/techreports/2010/891.pdf), Thesis, 2018. Contains a chapter on the GameTrak RealWorldGolf USB Controller (p. 92). 
+* Samuel Thompson Parke-Wolfe, Hugo Scurto, Rebecca Fiebrink. [*Sound Control: Supporting Custom Musical Interface Design for Children with Disabilities*](https://www.nime.org/proceedings/2019/nime2019_paper038.pdf), NIME, 2019. 
+* Simon Katan, Mick Grierson, Rebecca Fiebrink. [*Using Interactive Machine Learning to Support Interface Development Through Workshops with Disabled People*](https://www.researchgate.net/publication/300725385_Using_Interactive_Machine_Learning_to_Support_Interface_Development_Through_Workshops_with_Disabled_People), CHI, 2015.
+* Hugo Scurto, Rebecca Fiebrink. [*Grab-and-play mapping: Creative machine learning approaches for musical inclusion and exploration*](https://hal.science/hal-02043739/document), ICMC, 2016. 
+* Anne Hege, [*From the Water*](https://www.youtube.com/watch?v=nbAjn0VKd9s), 2016. Wekinator was used to create several GameTrak-controlled instruments.
 * [Jenn Kirby, *Duet for 3D Printer and Gametrak*](https://www.youtube.com/watch?v=K9OYlnF-eto). A live electronic music performance in which a 3D printer is controlled by a GameTrak interface.
 * [Chris O'Shea, *Drop Spin Fade*](https://www.chrisoshea.org/portfolio/drop-spin-fade) - interactive artwork reference involving GameTrak-style gestural control.
 * [Richard McReynolds, *The GameTrak Controller*](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf) - new-media dance and sound context, including *[Capturing Movement in Sound](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)*.
