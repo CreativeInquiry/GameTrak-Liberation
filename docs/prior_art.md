@@ -81,7 +81,7 @@ Axis maxs: [4051, 1250, 3710, 4077, 853, 3706]
 
 * [Jenn Kirby, *Duet for 3D Printer and Gametrak*](https://www.youtube.com/watch?v=K9OYlnF-eto). A live electronic music performance in which a 3D printer is controlled by a GameTrak interface.
 * [Chris O'Shea, *Drop Spin Fade*](https://www.chrisoshea.org/portfolio/drop-spin-fade) - interactive artwork reference involving GameTrak-style gestural control.
-* [Richard McReynolds, *The GameTrak Controller*](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf) - new-media dance and sound context, including *Capturing Movement in Sound*.
+* [Richard McReynolds, *The GameTrak Controller*](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf) - new-media dance and sound context, including *[Capturing Movement in Sound](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)*.
 * [David Goldberg, *Game Trak*](https://www.davidgoldberg.net/gesticularcontroller) - musical-interface notes connecting GameTrak, Wekinator, Max/MSP, SuperCollider, and spatial control.
 * [ResearchGate figure: GameTrak tether controller and hemispherical speaker](https://www.researchgate.net/figure/a-GameTrak-Tether-Controller-and-bHemispherical-Speaker-with-Subwoofer_fig2_353363867) - figure from *Instrument Design for The Furies: A LaptOpera*.
 * [Gareth W. Young, *GameTrak game controller Project*](https://gareth.prof/2014/10/23/gametrak-game-controller-project/) - Arduino/Processing/OSC hardware rebuild, including a haptic bowl modification.

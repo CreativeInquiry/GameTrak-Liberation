@@ -43,8 +43,7 @@ legible 3D position-trackers, the device has become a popular platform for exper
 
 ## Supported Workflows
 
-[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />*From "[Capturing Movement in Sound](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)" (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [More information](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf).*
-
+[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />*From "[Capturing Movement in Sound](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf)" (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [See more creative projects](docs/prior_art.md).*
 
 This repository presents several ways to acquire, translate, and use data from the GameTrak controller:
 
