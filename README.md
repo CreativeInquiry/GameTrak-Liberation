@@ -8,9 +8,9 @@ By Golan Levin, July 2026
 
 ## Overview
 
-This project makes the In2Games [GameTrak](https://en.wikipedia.org/wiki/Gametrak)  PlayStation controller usable as a six-axis [HID](https://en.wikipedia.org/wiki/Human_interface_device) (human interface device) via [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control), [MIDI](https://en.wikipedia.org/wiki/MIDI), [WebMIDI](https://www.w3.org/TR/webmidi/), [WebSockets](https://en.wikipedia.org/wiki/WebSocket), and other workflows. Working examples are provided for popular creative coding environments including [Processing](https://processing.org/) (Java), [p5.js](https://p5js.org/), and Python.
+This project makes the In2Games [GameTrak](https://en.wikipedia.org/wiki/Gametrak)  PlayStation controller usable as a six-axis [HID](https://en.wikipedia.org/wiki/Human_interface_device) (human interface device) via [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control), [MIDI](https://en.wikipedia.org/wiki/MIDI), [WebMIDI](https://www.w3.org/TR/webmidi/), [WebSockets](https://en.wikipedia.org/wiki/WebSocket), [stdout](https://en.wikipedia.org/wiki/Standard_streams), and other workflows. Working examples are provided for popular creative coding environments including [Processing](https://processing.org/) (Java), [p5.js](https://p5js.org/), and Python.
 
-This work builds on the [libgametrak](https://github.com/casiez/libgametrak) C-language library by Géry Casiez ([@casiez](https://github.com/casiez/)) — especially his discovery of the GameTrak's special USB initialization message. The GameTrak controller appears on macOS as a standard USB HID joystick-class device. *However*, the GameTrak does not begin to stream useful data until it receives the initialization message used by `libgametrak`'s PS2 mode. More information about credits, references, and redistributed third-party code can be found [here](THIRD_PARTY.md).
+This work builds on the [libgametrak](https://github.com/casiez/libgametrak) C-language library by Géry Casiez ([@casiez](https://github.com/casiez/)) — especially his discovery of the GameTrak's special USB initialization message. The GameTrak controller appears on macOS as a standard USB HID joystick-class device. *However*, the GameTrak does not begin to stream useful data until it receives the initialization message used by `libgametrak`'s PS2 mode. More information about references to creative research, credits, and redistributed third-party code can be found [here](THIRD_PARTY.md).
 
 This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4.5.5 and 4.3, and p5.js 1.11.13 and 2.3.0. The specific unit tested here is physically labeled *GameTrak V2.0* on its underside, while USB reports *Game-Trak V1.3* from *In2Games Ltd*; it uses VID `0x14B7` and PID `0x0982`. 
 
@@ -25,6 +25,7 @@ This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4
 * [Calibration Boundary](#calibration-boundary)
 * [Development](#development)
 * [Troubleshooting](#troubleshooting)
+* [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -34,7 +35,7 @@ This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4
 
 The GameTrak was originally made as a PlayStation 2 controller for the golf
 game *Real World Golf* by In2Games Ltd. Its unusual interface has two joystick assemblies, each with X/Y motion plus a retractable tether, yielding six 12-bit position streams in the `0..4095` range at 75 Hz. Because used units can be quite [inexpensive on eBay](https://www.ebay.com/sch/i.html?_nkw=Gametrak+controller+PS2) (about
-USD 20-40), and because the tethered joysticks are expressive and physically
+USD $20-40), and because the tethered joysticks are expressive and physically
 legible 3D position-trackers, the device has become a popular platform for experimental interfaces, especially in electronic music and machine-learning workflows such as
 [Wekinator](https://doc.gold.ac.uk/~mas01rf/Wekinator/). Some examples of creative projects that use the GameTrak can be found listed [here](docs/prior_art.md). 
 
@@ -43,7 +44,7 @@ legible 3D position-trackers, the device has become a popular platform for exper
 
 ## Supported Workflows
 
-[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />*From "[Capturing Movement in Sound](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf)" (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [See more creative projects](docs/prior_art.md).*
+[![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />*From "[Capturing Movement in Sound](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf)" (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [See more creative projects that use the GameTrak](docs/prior_art.md).*
 
 This repository presents several ways to acquire, translate, and use data from the GameTrak controller:
 
@@ -675,5 +676,13 @@ gametrak-stdout --diagnose
 gametrak-record --diagnose
 gametrak-midi --diagnose
 ```
+
+---
+
+## Acknowledgments
+
+* Thanks to [Rebecca Fiebrink](https://researchers.arts.ac.uk/1594-rebecca-fiebrink) for introducing me to the GameTrak during a Wekinator workshop at the STUDIO. Rebecca has cut the path for demonstrating how expressive controllers like the GameTrak, coupled with machine learning, can serve musical inclusion and exploration.
+* Thanks to Géry Casiez, whose `libgametrak` reverse-engineering project did the heavy lifting to make this possible, more than 14 years ago. 
+* This repository was developed with Codex.
 
 ---
