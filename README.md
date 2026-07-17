@@ -15,7 +15,7 @@ You might think that the Gametrak controller would behave like a typical USB HID
 
 This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4.5.5 and 4.3, and p5.js 1.11.13 and 2.3.0. The specific unit tested here is physically labeled *GameTrak V2.0* on its underside, while USB reports *Game-Trak V1.3* from *In2Games Ltd*; it uses VID `0x14B7` and PID `0x0982`. 
 
-**Contents:**
+#### **Contents:**
 
 * [About the Gametrak Controller](#about-the-gametrak-controller)
 * [Supported Workflows](#supported-workflows)
