@@ -19,9 +19,9 @@ This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4
 
 * [About the Gametrak Controller](#about-the-gametrak-controller)
 * [Supported Workflows](#supported-workflows)
-* [Quick Start](#quick-start)
-* [Python Commands](#python-commands)
-* [Processing And p5.js](#processing-and-p5js)
+* [Python Quick Start for Gametrak](#python-quick-start-for-gametrak)
+* [Python Utilities](#python-utilities)
+* [Gametrak in Processing and p5.js](#gametrak-in-processing-and-p5js)
 * [Device And Protocol Facts](#device-and-protocol-facts)
 * [Calibration Boundary](#calibration-boundary)
 * [Development](#development)
@@ -77,28 +77,36 @@ left_x left_y left_r right_x right_y right_r
 
 ---
 
-## Quick Start
+## Python Quick Start for Gametrak
 
-![charles_lootd](img/charles_lootd_gametrak_review.jpg)
+![Image from Charles Lootd's GameTrak review, https://www.youtube.com/watch?v=0VzQ3KgV5Gc](img/charles_lootd_gametrak_review.jpg)
 
-**Install** the Python commands from a source checkout with `pipx`:
+**Install** the Python commands inside a virtual environment:
+
+```bash
+# From the repository root:
+python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install -e ./python
+```
+
+The virtual environment keeps this project's Python packages isolated from the
+rest of your computer. When you return to the project in a new Terminal window,
+reactivate it before running the GameTrak commands:
+
+```bash
+source .venv/bin/activate
+```
+
+Alternatively, if you want the commands installed like standalone apps without
+activating this project's venv, use `pipx`:
 
 ```bash
 cd python
 pipx install --python python3.10 .
 ```
-
-If you already installed an earlier checkout, force a reinstall so new commands
-and dependencies are picked up:
-
-```bash
-cd python
-pipx install --force --python python3.10 .
-```
-
-If `pipx install .` reports that Python 3.9 is too old, keep using the explicit
-`--python python3.10` form above, or point `pipx` at another installed Python
-3.10+ interpreter.
 
 Run one of the Python "bridge" apps:
 
@@ -115,11 +123,9 @@ should quit `gametrak-osc` before launching `gametrak-midi`, `gametrak-ws`,
 does not open the Gametrak device, so it can be used when the controller is not
 attached.
 
-*(Image from Charles Lootd's GameTrak [review](https://www.youtube.com/watch?v=0VzQ3KgV5Gc) video)*
-
 ---
 
-## Python Commands
+## Python Utilities
 
 Hardware-owning Python commands support:
 
@@ -356,22 +362,22 @@ descriptor-scale normalized floats and no button bitfield:
 
 ---
 
-## Processing And p5.js
+## Gametrak in Processing and p5.js
 
 ![gametrak_osc_in_processing.gif](img/gametrak_osc_in_processing.gif)
 
 
 ### Processing Standalone HID
 
+[**This Processing sketch**](processing/gametrak_standalone/gametrak_standalone.pde) talks to the Gametrak directly through `hid4java`. It does not
+require Python, OSC, WebMIDI, or a local server. It has been tested in
+Processing 4.3 and Processing 4.5.5 on macOS 15.6.
+
 Path:
 
 ```text
 processing/gametrak_standalone/
 ```
-
-[**This Processing sketch**](processing/gametrak_standalone/gametrak_standalone.pde) talks to the Gametrak directly through `hid4java`. It does not
-require Python, OSC, WebMIDI, or a local server. It has been tested in
-Processing 4.3 and Processing 4.5.5 on macOS 15.6.
 
 Bundled Java dependencies:
 
@@ -657,7 +663,18 @@ If a bridge cannot open the HID device, quit other HID clients first. Chrome
 WebMIDI, the standalone Processing HID sketch, and Python bridges can compete
 for the same device.
 
-If `pipx install .` uses Python 3.9, reinstall with:
+If the virtual environment was accidentally created with Python 3.9, delete it
+and recreate it with Python 3.10 or newer:
+
+```bash
+rm -rf .venv
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ./python
+```
+
+If you are using the optional `pipx` workflow and it chooses Python 3.9,
+reinstall with:
 
 ```bash
 pipx install --force --python python3.10 .
