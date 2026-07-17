@@ -292,7 +292,33 @@ Input streaming did not begin after open/read alone.
 Input streaming did begin after sending libgametrak's optional ps2mode init sequence.
 ```
 
-Observed successful init sequence:
+### Stream Initialization
+
+Per `libgametrak`’s PS2-mode initialization, the Gametrak is awakened with the special byte sequence:
+
+```
+47 61 6D 65 74 72 61 6B   # ASCII "Gametrak"
+45 23
+```
+
+Thereafter, it requires periodic [rolling-key](https://en.wikipedia.org/wiki/Rolling_code) [keepalive packets](https://en.wikipedia.org/wiki/Keepalive), structured like this:
+
+```
+46 <rolling-key-byte>
+```
+
+The rolling key starts from `0x23`; each keepalive uses the low byte of the next computed key. The first few keepalives are:
+
+```
+46 8D
+46 35
+46 DD
+46 15
+```
+
+So in sum: write ASCII `Gametrak`, then `45 23`, then keep the stream alive with `46 XX` rolling-key packets.
+
+Here is the observed successful init sequence:
 
 ```text
 1. Open VID 0x14B7 PID 0x0982 with hidapi.

@@ -1,6 +1,7 @@
 # GameTrak Liberation
 
-By Golan Levin, July 2026
+*Stream Gametrak controller data over OSC, MIDI, or WebSockets with Processing, Python, or p5.js.<br/>
+By Golan Levin, July 2026*
 
 ![gametrak_overview_demo](img/gametrak_overview_demo.gif)
 
@@ -8,9 +9,9 @@ By Golan Levin, July 2026
 
 ## Overview
 
-This project makes the In2Games [Gametrak](https://en.wikipedia.org/wiki/Gametrak)  PlayStation controller usable as a six-axis [HID](https://en.wikipedia.org/wiki/Human_interface_device) (human interface device) via [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control), [MIDI](https://en.wikipedia.org/wiki/MIDI), [WebMIDI](https://www.w3.org/TR/webmidi/), [WebSockets](https://en.wikipedia.org/wiki/WebSocket), [stdout](https://en.wikipedia.org/wiki/Standard_streams), and other workflows. Working examples are provided for popular creative coding environments including [Processing](https://processing.org/) (Java), [p5.js](https://p5js.org/), and Python.
+This project makes the In2Games [Gametrak](https://en.wikipedia.org/wiki/Gametrak)  PlayStation controller usable as a six-axis [HID](https://en.wikipedia.org/wiki/Human_interface_device) (human interface device) via [OSC](https://en.wikipedia.org/wiki/Open_Sound_Control), [MIDI](https://en.wikipedia.org/wiki/MIDI), [WebMIDI](https://www.w3.org/TR/webmidi/), [WebSockets](https://en.wikipedia.org/wiki/WebSocket), [stdout](https://en.wikipedia.org/wiki/Standard_streams), and other common protocols. Working examples are provided for popular creative coding environments including [Processing](https://processing.org/) (Java), [p5.js](https://p5js.org/), and Python.
 
-This work builds on the [libgametrak](https://github.com/casiez/libgametrak) C-language library by Géry Casiez ([@casiez](https://github.com/casiez/)) — especially his discovery of the Gametrak's special USB initialization message. The Gametrak controller appears on macOS as a standard USB HID joystick-class device. *However*, the GameTrak does not begin to stream useful data until it receives the initialization message used by `libgametrak`'s PS2 mode. More information about third-party code redistributed in this project can be found [here](THIRD_PARTY.md); some references to creative research with the Gametrak can be found [here](docs/prior_art.md).
+You might think that the Gametrak controller would behave like a typical USB HID device, and stream data as soon as it is connected. It *ought* to, but unfortunately, it does not. The Gametrak does not begin to stream useful data until it receives a magic initialization message (ASCII "`Gametrak`") — and it does not *continue* to produce sustained data without receiving a sequence of specially-computed [rolling-key](https://en.wikipedia.org/wiki/Rolling_code) [keepalive packets](https://en.wikipedia.org/wiki/Keepalive), as described in [`docs/protocol.md`](docs/protocol.md#stream-initialization). We owe this arcane knowledge to the reverse-engineering effort of [Géry Casiez](https://github.com/casiez/), whose [`libgametrak`](https://github.com/casiez/libgametrak) C-language library forms the foundation for the work here. More information about the third-party code redistributed in this repository can be found [here](THIRD_PARTY.md); some references to creative research with the Gametrak can be found [here](docs/prior_art.md).
 
 This work has been tested in macOS 15.6 using Python 3.10 and 3.14, Processing 4.5.5 and 4.3, and p5.js 1.11.13 and 2.3.0. The specific unit tested here is physically labeled *GameTrak V2.0* on its underside, while USB reports *Game-Trak V1.3* from *In2Games Ltd*; it uses VID `0x14B7` and PID `0x0982`. 
 
@@ -46,16 +47,16 @@ legible 3D position-trackers, the device has become a popular platform for exper
 
 [![mcreynolds_nicholson_dance.jpg](img/mcreynolds_nicholson_dance.jpg)](https://www.youtube.com/watch?v=HdFHGbpswag&t=189s)<br />*From "[Capturing Movement in Sound](https://richardmcreynolds.com/blog/2024/1/8/yx7md3hbz8mngcy14oat54rgljgknf)" (2024) by Richard McReynolds, performed by Jodi Ann Nicholson. [See more creative projects that use the GameTrak](docs/prior_art.md).*
 
-This repository presents several ways to acquire, translate, and use data from the Gametrak controller:
+This repository presents several ways to acquire, translate, and use data from the Gametrak [HID](https://en.wikipedia.org/wiki/Human_interface_device) (human interface device) controller:
 
-| Path | What It Is, When To Use It|
+| Utility | What It Is, When To Use It|
 |---|---|
-| `gametrak-stdout` | **HID-to-stdout**. This is a command-line program, built in Python, which emits Gametrak controller data to `stdout` in the Terminal. It is good for quick diagnostics, logging, piping data to other programs, and other Unix-style scripts. |
-| `gametrak-record` | **HID-to-JSONL**. This is a command-line program, built in Python, which records full raw HID reports as [JSONL](https://scrapfly.io/blog/posts/jsonl-vs-json) files. It is intended for protocol research, official sample captures, bug reports, and reproducible test data. |
-| `gametrak-playback` | **JSONL-to-stdout/OSC/MIDI/WebSocket**. This is an offline command-line program, built in Python, which replays `gametrak-record` captures through one selected output protocol. It is useful for receiver development without the physical controller. |
-| `gametrak-osc` | **HID-to-OSC**. This is a command-line program, built in Python,  which transmits Gametrak controller data over OSC to other software (such as Processing, TouchDesigner, Max/MSP, etc.). A Processing (Java) OSC receiver is also provided. |
-| `gametrak-midi` | **HID-to-MIDI**. This is a command-line program, built in Python, which transmits Gametrak controller data as MIDI pitch-bend signals. It is usable with any MIDI software (Max/MSP, Ableton Live, Logic, VCV Rack, MIDI Monitor) that can read virtual MIDI ports, as well as web applications in browsers that support WebMIDI. A p5.js receiver is also provided. |
-| `gametrak-ws` | **HID-to-WebSocket JSON**. This is a command-line program, built in Python, which streams Gametrak data to browser sketches over native WebSockets. It is useful for p5.js and other JavaScript projects and does not require Node.js or WebMIDI. A p5.js receiver is also provided. |
+| [`gametrak-stdout`](python/gametrak/stdout.py) | **HID-to-stdout**. This is a command-line program, built in Python, which emits Gametrak controller data to `stdout` in the Terminal. It is good for quick diagnostics, logging, piping data to other programs, and other Unix-style scripts. |
+| [`gametrak-record`](python/gametrak/record.py) | **HID-to-JSONL**. This is a command-line program, built in Python, which records full raw HID reports as [JSONL](https://scrapfly.io/blog/posts/jsonl-vs-json) files. It is intended for protocol research, official sample captures, bug reports, and reproducible test data. |
+| [`gametrak-playback`](python/gametrak/playback.py) | **JSONL-to-stdout/OSC/MIDI/WebSocket**. This is an offline command-line program, built in Python, which replays `gametrak-record` captures through one selected output protocol. It is useful for receiver development without the physical controller. |
+| [`gametrak-osc`](python/gametrak/osc.py) | **HID-to-OSC**. This is a command-line program, built in Python,  which transmits Gametrak controller data over OSC to other software (such as Processing, TouchDesigner, Max/MSP, etc.). A Processing (Java) OSC receiver is also provided. |
+| [`gametrak-midi`](python/gametrak/midi.py) | **HID-to-MIDI**. This is a command-line program, built in Python, which transmits Gametrak controller data as MIDI pitch-bend signals. It is usable with any MIDI software (Max/MSP, Ableton Live, Logic, VCV Rack, MIDI Monitor) that can read virtual MIDI ports, as well as web applications in browsers that support WebMIDI. A p5.js receiver is also provided. |
+| [`gametrak-ws`](python/gametrak/ws.py) | **HID-to-WebSocket JSON**. This is a command-line program, built in Python, which streams Gametrak data to browser sketches over native WebSockets. It is useful for p5.js and other JavaScript projects and does not require Node.js or WebMIDI. A p5.js receiver is also provided. |
 | [gametrak_midi_receiver_p5v2](p5js/gametrak_midi_receiver_p5v2/README.md) | **MIDI-to-p5**. This is a p5.js (v.2.3.0) sketch which receives and visualizes MIDI data from `gametrak-midi` via WebMIDI. The six 12-bit data streams are sent as pitch-bend signals on MIDI channels 1-6. Both v1 and v2 of p5.js are supported. Uses [webmidi.js](https://webmidijs.org/). |
 | [gametrak_ws_receiver_p5v2](p5js/gametrak_ws_receiver_p5v2/README.md) | **WebSocket-to-p5**. This is a p5.js (v.2.3.0) sketch which receives and visualizes JSON messages from `gametrak-ws` over browser-native WebSockets. Both v1 and v2 of p5.js are supported. |
 | [gametrak_osc_receiver](processing/gametrak_osc_receiver/) | **OSC-to-Processing**. This is a Processing (v.4.5.5) app which receives and visualizes OSC data from `gametrak-osc`. By default, OSC receivers should listen on UDP port 2434. |
@@ -579,11 +580,8 @@ bytes 14-15: descriptor padding, but live captures show right-tether-related mov
 
 The available hardware used for testing did not include the external footswitch. The descriptor exposes button bits, but footswitch bit index and polarity remain untested.
 
-Full protocol notes live in:
+Full protocol notes live in [`docs/protocol.md`](docs/protocol.md).
 
-```text
-docs/protocol.md
-```
 
 ---
 
